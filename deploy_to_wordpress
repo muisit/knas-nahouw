@@ -1,0 +1,206 @@
+#!/bin/bash
+
+source  .env
+
+RELEASE="1"
+MAJOR="0"
+MINOR="0"
+MICRO="0"
+DOPOT="0"
+DOTEST="0"
+NOUPDATE="0"
+
+while [ $# -gt 0 ]
+do
+    arg=$1
+    shift
+    
+    if [[ "x$arg" = "x-v" ]]
+    then
+        RELEASE="1"
+        MINOR="1"
+    fi
+
+    if [[ "x$arg" = "x-r" ]]
+    then
+        RELEASE="1"        
+        MAJOR="1"
+    fi
+
+    if [[ "x$arg" = "x-p" ]]
+    then
+        DOPOT="1"
+        RELEASE="0"
+    fi
+
+    if [[ "x$arg" = "x-t" ]]
+    then
+        DOTEST="1"
+        RELEASE="0"
+    fi
+
+    if [[ "x$arg" = "x-n" ]]
+    then
+        NOUPDATE="1"
+    fi
+
+    if [[ "x$arg" = "x-h" ]]
+    then
+        echo "Deploy to Wordpress script"
+        echo "Copyright (C) 2020-2023 muis IT https://www.muisit.nl"
+        echo ""
+        echo "deploy_to_wordpress [options]"
+        echo ""
+        echo "-h           print this help text"
+        echo "-p           search strings and regenerate the POT file"
+        echo "-r           release a major release (tag with major value upgraded)"
+        echo "-t           run extended tests"
+        echo "-v           release a minor release (tag with minor value upgraded)"
+        echo "-n           do not update the version"
+        echo ""
+        echo "Add the WPDIR directory location of the destination SVN repository in the"
+        echo ".env file next to this script. Set the PROJECT variable to the name of"
+        echo "the project/plugin name/file containing the version number. Set the WPCLI"
+        echo "variable to the wordpress CLI executable for purposes of I18N"
+        exit
+    fi
+done
+
+if [[ "x$DOPOT" = "x1" ]]
+then
+    echo "Creating POT file"
+    $WPCLI i18n make-pot . languages/$PROJECT.pot --exclude="vue" --include="lib,models,controllers,assets,dist,$PROJECT.php"
+    echo "Update PO files"
+    $WPCLI i18n update-po languages/$PROJECT.pot
+fi
+
+if [[ -d languages ]]
+then
+    # always just update the language files
+    echo "Updating I18N output files"
+    rm -f languages/*.mo languages/*.json
+    $WPCLI i18n make-mo languages
+    # do not purge the original translations
+    $WPCLI i18n make-json languages --pretty-print --no-purge
+fi
+
+# not releasing, just quit
+if [[ "x$DOPOT" = "x1" ]]
+then
+    exit 0
+fi
+
+#phpunit --bootstrap tests/preload.php --testdox --colors=always tests 
+#phpunit --bootstrap tests/preload.php --stderr tests 2>/dev/null
+#if [[ ! "x$?" = "x0" ]]
+#then
+#    echo "PHPUnit tests fail, please run tests yourself"
+#    echo "phpunit --bootstrap tests/preload.php --testdox --colors=always tests"
+#    exit 1
+#else
+#    echo "PHPUnit tests succeed"
+#fi
+
+# not releasing, just quit
+if [[ "x$DOTEST" = "x1" ]]
+then
+    exit 0
+fi
+
+if [[ "x$MAJOR" = "x1" && "x$MINOR" = "x1" ]]
+then
+    echo "Major release requires a minor version of 0, ignoring -v"
+    MINOR="0"
+fi
+
+VERSION=`grep "* Version" "$PROJECT.php" | sed 's/[^0-9]*\([0-9\.]*\).*/\1/'`
+MAJ=`echo $VERSION | sed 's/\([0-9]*\).*/\1/'`
+MIN=`echo $VERSION | sed 's/[0-9]*\.\([0-9]*\).*/\1/'`
+MICR=`echo $VERSION | sed 's/[0-9]*\.[0-9]*\.\([0-9]*\)/\1/'`
+
+if [[ "x1" = "x$NOUPDATE" ]]
+then
+    echo "No version update"
+else
+    if [[ "x1" = "x$MAJOR" ]]
+    then
+        echo "Performing major release"
+        let "MAJ=$MAJ+1"
+        MIN="0"
+        MICR="0"
+    else
+        if [[ "x1" = "x$MINOR" ]]
+        then
+            echo "Performing minor release"
+            let "MIN=$MIN+1"
+            MICR="0"
+        else
+            if [[ "x$RELEASE" = "x1" ]]
+            then
+                echo "Performing micro release"
+                let "MICR=$MICR+1"
+            fi
+        fi
+    fi
+fi
+
+echo "Version ${MAJ}.${MIN}.${MICR}"
+
+cat "$PROJECT.php" | sed "s/\(.*Version[ \t:]*\).*/\1${MAJ}.${MIN}.${MICR}/" > tmp.$$
+mv tmp.$$ "$PROJECT.php"
+cat "$PROJECT.php" |  sed "s/\(define.*VERSION[^\"]*\"\)[^\"]*\(\".*\)/\1${MAJ}.${MIN}.${MICR}\2/"  > tmp.$$
+mv tmp.$$ "$PROJECT.php"
+
+mkdir -p $WPDIR/trunk
+# clear out the trunk, we're rebuilding it
+echo "clearing out the trunk"
+rm -rf $WPDIR/trunk/*
+echo "copying files"
+cp -r *.php LICENSE readme.txt lib views $WPDIR/trunk
+if [[ -d vendor ]]
+then
+    cp -r vendor $WPDIR/trunk
+fi
+
+if [[ -d languages ]]
+then
+    echo "rebuilding language files in root"
+    # recreate the pot file to make sure it refers to the right javascript files
+    $WPCLI i18n make-pot . languages/$PROJECT.pot --exclude="vendor" --include="lib,views,$PROJECT.php"
+    # update the PO files
+    $WPCLI i18n update-po languages/$PROJECT.pot
+
+    echo "copying language files to trunk"
+    mkdir -p $WPDIR/trunk/languages
+    cp languages/*.po $WPDIR/trunk/languages
+
+    # purge the language files and output them small
+    pushd $WPDIR/trunk > /dev/null
+    echo "creating mo files in trunk"
+    rm -f languages/*.mo
+    $WPCLI i18n make-mo languages
+    rm -rf languages/*.po
+    popd > /dev/null
+fi
+
+# unset all debug flags
+echo "unsetting debug flags"
+pushd $WPDIR/trunk > /dev/null
+cat $PROJECT.php | sed "s/\(define.*DEBUG.*\).*true/\1false/i" > tmp.php
+mv tmp.php $PROJECT.php
+popd > /dev/null
+
+echo "creating plugin zip file"
+mkdir /tmp/dir.$$
+pushd /tmp/dir.$$ > /dev/null
+cp -darp $WPDIR/trunk /tmp/dir.$$/$PROJECT
+zip -r $PROJECT $PROJECT
+# move it one folder up, out of the SVN
+mv $PROJECT.zip $WPDIR/..
+popd > /dev/null
+rm -rf /tmp/dir.$$
+
+if [[ "x0" = "x$NOUPDATE" ]]
+then
+    mg create tag "${MAJ}.${MIN}.${MICR}" -m "auto tagged commit"
+fi

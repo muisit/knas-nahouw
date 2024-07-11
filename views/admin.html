@@ -1,0 +1,110 @@
+<div class="knas-nahouw">
+    <div class="container">
+        <h1>{{ labels.title }}</h1>
+        <p>{{ labels.introduction }}</p>
+        <form method="POST" action="{{ action|e('html_attr') }}">
+            <input type="hidden" name="action" value="knasnahouw_save">
+            <input type="hidden" id="nonce" name="nonce" value="{{ nonce|e('html_attr') }}"/>
+            <div class="row p-2">
+                <div class="col-4 col-md-2">
+                    {{ labels.url }}
+                </div>
+                <div class="col-8 col-md-10">
+                    <input style='width: 100%' type="text" name="url" value="{{ config.url|e('html_attr')}}">
+                </div>
+            </div>
+            <div class="row p-2">
+                <div class="col-4 col-md-2">
+                    {{ labels.schedule }}
+                </div>
+                <div class="col-8 col-md-10">
+                    <input style='width: 100%' type="text" name="time" value="{{ config.time|e('html_attr')}}">
+                </div>
+            </div>
+            <div class="row p-2">
+                <div class="col-4 col-md-2">
+                    {{ labels.filter }}
+                </div>
+                <div class="col-8 col-md-10">
+                    <input type="checkbox" id='filter_ned' name="filter_ned" value='1' {% if config.filter_ned %}checked{% endif %}>
+                    <label for="filter_ned">{{ labels.filter_ned }}</label><br/>
+                    <input type="checkbox" id='filter_ecc' name="filter_ecc" value='1' {% if config.filter_ecc %}checked{% endif %}>
+                    <label for="filter_ecc">{{ labels.filter_ecc }}</label><br/>
+                    <input type="checkbox" id='filter_wc' name="filter_wc" value='1' {% if config.filter_wc %}checked{% endif %}>
+                    <label for="filter_wc">{{ labels.filter_wc }}</label><br/>
+                    <input type="checkbox" id='filter_title' name="filter_title" value='1' {% if config.filter_title %}checked{% endif %}>
+                    <label for="filter_title">{{ labels.filter_title }}</label><br/>
+                </div>
+            </div>
+            <div class="row p-2">
+                <div class="col-1 offset-4">
+                    <input type="submit" name="button" value="{{ labels.submit|e('html_attr') }}">
+                </div>
+            </div>
+            <div class="row p-2">
+                <div class="col-12">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>{{ labels.name }}</th>
+                                <th>{{ labels.start }}</th>
+                                <th>{{ labels.end }}</th>
+                                <th>{{ labels.location }}</th>
+                                <th>{{ labels.level }}</th>
+                                <th>{{ labels.level }}</th>
+                                <th>{{ labels.weapons }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for tn in tournaments %}
+                            <tr>
+                                <td><a href="{{ tn.uri|e('html_attr')}}">{{ tn.name }}</a></td>
+                                <td>{{ tn.start }}</td>
+                                <td>{{ tn.end }}</td>
+                                <td>{{ tn.location }}</td>
+                                <td>
+                                    {% if tn.conv_type.Titeltoernooien == 'true' %}
+                                      {{ labels.titletournament }}
+                                    {% elseif tn.conv_type.Wereldbeker == 'true' %}
+                                      {{ labels.worldcup }}
+                                    {% elseif tn.conv_type.ECC == 'true' %}
+                                      {{ labels.ecc }}
+                                    {% elseif tn.conv_type.Internationaal == 'true' %}
+                                      {{ labels.international }}
+                                    {% elseif tn.conv_type.Nationaal == 'true' %}
+                                      {{ labels.national }}
+                                    {% else %}
+                                      {{ labels.other }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {{ tn.level }}
+                                </td>
+                                <td>
+                                    {% if tn.conv_weapon.sabel == 'true' %}
+                                      {{ labels.sabre }}
+                                    {% endif %}
+                                    {% if tn.conv_weapon.degen == 'true' %}
+                                      {{ labels.epee }}
+                                    {% endif %}
+                                    {% if tn.conv_weapon.floret == 'true' %}
+                                      {{ labels.foil }}
+                                    {% endif %}
+                                    {% if tn.conv_weapon.sabel == "false" and tn.conv_weapon.degen == "false" and tn.conv_weapon.floret == "false" %}
+                                      {{ labels.other }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}           
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row p-2">
+                <div class="col-1 offset-4">
+                    <input type="submit" name="button" value="{{ labels.sync|e('html_attr') }}">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

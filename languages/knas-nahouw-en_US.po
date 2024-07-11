@@ -1,0 +1,153 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: knas-nahouw 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/knas-nahouw\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-07-10T09:33:57+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Language: \n"
+"X-Generator: WP-CLI 2.8.1\n"
+"X-Domain: knas-nahouw\n"
+
+#. Plugin Name of the plugin
+msgid "knas-nahouw"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://github.com/muisit/knas-nahouw"
+msgstr ""
+
+#. Description of the plugin
+msgid "Interface to download Nahouw registered events to the KNAS schermen.org site"
+msgstr ""
+
+#. Author of the plugin
+msgid "Michiel Uitdehaag"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://www.muisit.nl"
+msgstr ""
+
+#: lib/Display.php:55
+msgid "API Url"
+msgstr ""
+
+#: lib/Display.php:67
+#: lib/Display.php:115
+msgid "Submit"
+msgstr ""
+
+#: lib/Display.php:106
+msgid "Sorry, your nonce did not verify."
+msgstr ""
+
+#: lib/Display.php:110
+msgid "You can't manage options"
+msgstr ""
+
+#: lib/Display.php:127
+msgid "Changes saved."
+msgstr ""
+
+#: lib/Display.php:166
+#: lib/Display.php:167
+msgid "Nahouw"
+msgstr ""
+
+#: lib/Display.php:53
+msgid "Settings"
+msgstr "KNAS Nahouw Settings"
+
+#: lib/Display.php:54
+msgid "Settings_Intro"
+msgstr "Configuration for the interface between Nahouw and this site"
+
+#: lib/Display.php:56
+msgid "Run time"
+msgstr "Time of processing"
+
+#: lib/Display.php:57
+msgid "Include NED tournaments"
+msgstr ""
+
+#: lib/Display.php:58
+msgid "Include ECC tournaments"
+msgstr ""
+
+#: lib/Display.php:59
+msgid "Include World Cup tournaments"
+msgstr ""
+
+#: lib/Display.php:60
+msgid "Include title tournaments"
+msgstr ""
+
+#: lib/Display.php:61
+msgid "Name"
+msgstr ""
+
+#: lib/Display.php:62
+msgid "Start"
+msgstr ""
+
+#: lib/Display.php:63
+msgid "End"
+msgstr ""
+
+#: lib/Display.php:64
+msgid "Level"
+msgstr ""
+
+#: lib/Display.php:65
+msgid "Location"
+msgstr ""
+
+#: lib/Display.php:66
+msgid "Weapons"
+msgstr ""
+
+#: lib/Display.php:68
+#: lib/Display.php:130
+msgid "Synchronize"
+msgstr ""
+
+#: lib/Display.php:69
+msgid "Title"
+msgstr ""
+
+#: lib/Display.php:70
+msgid "WC"
+msgstr ""
+
+#: lib/Display.php:71
+msgid "ECC"
+msgstr ""
+
+#: lib/Display.php:72
+msgid "Int"
+msgstr ""
+
+#: lib/Display.php:73
+msgid "Nat"
+msgstr ""
+
+#: lib/Display.php:74
+msgid "Other"
+msgstr ""
+
+#: lib/Display.php:75
+msgid "Sabre"
+msgstr ""
+
+#: lib/Display.php:76
+msgid "Epee"
+msgstr ""
+
+#: lib/Display.php:77
+msgid "Foil"
+msgstr ""
