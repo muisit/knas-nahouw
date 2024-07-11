@@ -213,17 +213,35 @@ class Plugin
 
     private static function categoryToMeta($tournament)
     {
-        // strip out line breaks
-        $cats = preg_replace("/[^A-Za-z0-9\- ]/", '', $tournament['categories']);
-        $hasB = strpos($cats, "benjamin ") !== false;
-        $hasP = strpos($cats, "boys ") !== false || strpos($cats, "girls ") !== false;
-        $hasC = strpos($cats, "cadet ") !== false;
-        $hasJ = strpos($cats, "junior ") !== false;
-        $hasS = strpos($cats, "mens ") !== false; // also matches women's
-        $hasV = strpos($cats, "veterans ") !== false;
+        // split categories on line break
+        $lst = preg_split('/[\r\n]/s', $tournament['categories']);
+        $hasB = false;
+        $hasP = false;
+        $hasC = false;
+        $hasJ = false;
+        $hasS = false;
+        $hasV = false;
         $hasR = false;
         $hasL = false;
         $hasO = false;
+
+        foreach ($lst as $cat) {
+            $posB = strpos($cat, "benjamin ") === 0;
+            $posC = strpos($cat, "cadet ") === 0;
+            $posJ = strpos($cat, "junior ") === 0;
+            $posV = strpos($cat, "veterans ") === 0;
+            $posBoys = strpos($cat, "boy's ") === 0;
+            $posGirls = strpos($cat, "girl's ") === 0;
+            $posMen = strpos($cat, "men's ") === 0;
+            $posWomen = strpos($cat, "women's ") === 0;
+
+            $hasB = $hasB || $posB;
+            $hasP = $hasP || $posBoys || $posGirls;
+            $hasC = $hasC || $posC;
+            $hasJ = $hasJ || $posJ;
+            $hasS = $hasS || $posMen || $posWomen;
+            $hasV = $hasV || $posV;
+        }
         return [
             "Benjamins" => $hasB ? 'true' : 'false',
             "Pupillen" => $hasP ? 'true' : 'false',

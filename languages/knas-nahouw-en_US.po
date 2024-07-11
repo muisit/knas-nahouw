@@ -38,24 +38,24 @@ msgid "API Url"
 msgstr ""
 
 #: lib/Display.php:67
-#: lib/Display.php:115
+#: lib/Display.php:103
 msgid "Submit"
 msgstr ""
 
-#: lib/Display.php:106
+#: lib/Display.php:94
 msgid "Sorry, your nonce did not verify."
 msgstr ""
 
-#: lib/Display.php:110
+#: lib/Display.php:98
 msgid "You can't manage options"
 msgstr ""
 
-#: lib/Display.php:127
+#: lib/Display.php:115
 msgid "Changes saved."
 msgstr ""
 
-#: lib/Display.php:166
-#: lib/Display.php:167
+#: lib/Display.php:154
+#: lib/Display.php:155
 msgid "Nahouw"
 msgstr ""
 
@@ -112,7 +112,7 @@ msgid "Weapons"
 msgstr ""
 
 #: lib/Display.php:68
-#: lib/Display.php:130
+#: lib/Display.php:118
 msgid "Synchronize"
 msgstr ""
 
