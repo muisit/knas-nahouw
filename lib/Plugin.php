@@ -106,19 +106,19 @@ class Plugin
             }
         }
         if ($config['filter_ecc'] !== false) {
-            $type = unserialize($tn['conv_type']);
+            $type = $tn['conv_type'];
             if ($type['ECC'] == 'true') {
                 return true;
             }
         }
         if ($config['filter_wc'] !== false) {
-            $type = unserialize($tn['conv_type']);
+            $type = $tn['conv_type'];
             if ($type['Wereldbeker'] == 'true') {
                 return true;
             }
         }
         if ($config['filter_title'] !== false) {
-            $type = unserialize($tn['conv_type']);
+            $type = $tn['conv_type'];
             if ($type['Titeltoernooien'] == 'true') {
                 return true;
             }
@@ -204,11 +204,11 @@ class Plugin
         $hasSa = strpos($tournament['weapons'], 'Sa') !== false;
         $hasEp = strpos($tournament['weapons'], 'Ep') !== false;
         $hasFl = strpos($tournament['weapons'], 'Fl') !== false;
-        return serialize([
+        return [
             "degen" => $hasEp ? 'true' : 'false',
             "floret" => $hasFl ? 'true' : 'false',
             "sabel" => $hasSa ? 'true' : 'false'
-        ]);
+        ];
     }
 
     private static function categoryToMeta($tournament)
@@ -224,7 +224,7 @@ class Plugin
         $hasR = false;
         $hasL = false;
         $hasO = false;
-        return serialize([
+        return [
             "Benjamins" => $hasB ? 'true' : 'false',
             "Pupillen" => $hasP ? 'true' : 'false',
             "Cadetten" => $hasC ? 'true' : 'false',
@@ -234,7 +234,7 @@ class Plugin
             "Rolstoel" => $hasR ? 'true' : 'false',
             "Lightsaber" => $hasL ? 'true' : 'false',
             "Overig" => $hasO ? 'true' : 'false',
-        ]);
+        ];
     }
 
     private static function typeToMeta($tournament)
@@ -256,13 +256,13 @@ class Plugin
                 ;
         // national when set national... or not set international (invitational for example)
         $hasN = strpos("National", $tournament['level']) !== false || !$hasI;
-        return serialize([
+        return [
             "Titeltoernooien" => $hasT ? 'true' : 'false',
             "Wereldbeker" => $hasW ? 'true' : 'false',
             "ECC" => $hasE ? 'true' : 'false',
             "Internationaal" => $hasI ? 'true' : 'false',
             "Nationaal" => $hasN ? 'true' : 'false',
-        ]);
+        ];
     }
 
     private static function sanitizeTournamentName($name, $start)

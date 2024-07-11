@@ -48,7 +48,7 @@ class Display
             'config' => $config,
             'action' => admin_url('admin-post.php'),
             'nonce' => wp_create_nonce('knasnahouw_save'),
-            'tournaments' => self::transformTournaments(json_decode(get_option(self::PACKAGENAME . '_syncstat') ?? '[]')),
+            'tournaments' => json_decode(get_option(self::PACKAGENAME . '_syncstat') ?? '[]'),
             'labels' => [
                 'title' => __('Settings', 'knas-nahouw'),
                 'introduction' => __('Settings_Intro', 'knas-nahouw'),
@@ -77,18 +77,6 @@ class Display
                 'foil' => __('Foil', 'knas-nahouw'),
             ]
         ]);
-    }
-
-    private static function transformTournaments($tns)
-    {
-        $retval = [];
-        foreach ($tns as $tn) {
-            $tn->conv_type = unserialize($tn->conv_type);
-            $tn->conv_weapon = unserialize($tn->conv_weapon);
-            $tn->conv_category = unserialize($tn->conv_category);
-            $retval[] = $tn;
-        }
-        return $retval;
     }
 
     public static function register($plugin)
