@@ -163,6 +163,7 @@ class Plugin
         // do not update the post_type
         // do not update the post_author
         // do not update the toernooi-naam for the same reason as above
+        // do not update homepagina_event
         //update_post_meta($post->ID, 'toernooi-naam', $tournament['name']);
         update_post_meta($post->ID, 'wapen', $tournament['conv_weapon']);
         update_post_meta($post->ID, 'categorie', $tournament['conv_category']);
@@ -192,8 +193,9 @@ class Plugin
                 'eind-datum_612' => ((new \DateTimeImmutable($tournament['end']))->getTimestamp()),
                 'live-stream-link' => '',
                 'nahouw-resultaten' => '',
-                'foto-poster' => '',
-                'nahouw-link' => $tournament['uri']
+                'foto--poster' => '',
+                'nahouw-link' => $tournament['uri'],
+                'homepagina_event' => 'true',
             ],
 
         ]);
