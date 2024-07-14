@@ -12,7 +12,7 @@
  * Plugin Name:         knas-nahouw
  * Plugin URI:          https://github.com/muisit/knas-nahouw
  * Description:         Interface to download Nahouw registered events to the KNAS schermen.org site
- * Version:             1.0.2
+ * Version:             1.0.3
  * Requires at least:   6.3
  * Requires PHP:        8.0
  * Author:              Michiel Uitdehaag
@@ -38,7 +38,7 @@
  * along with knas-nahouw.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-define('KNASNAHOUW_VERSION', "1.0.2");
+define('KNASNAHOUW_VERSION', "1.0.3");
 define('KNASNAHOUW_PACKAGENAME', 'knas-nahouw');
 define('KNASNAHOUW_DEBUG', true);
 define("KNASNAHOUW_DIR", WP_PLUGIN_DIR . '/knas-nahouw');

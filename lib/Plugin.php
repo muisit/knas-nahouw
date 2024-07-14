@@ -168,8 +168,8 @@ class Plugin
         update_post_meta($post->ID, 'categorie', $tournament['conv_category']);
         update_post_meta($post->ID, 'toernooi-type', $tournament['conv_type']);
         update_post_meta($post->ID, 'locatie', $tournament['location']);
-        update_post_meta($post->ID, 'begin-datum', $tournament['start']);
-        update_post_meta($post->ID, 'eind-datum', $tournament['end']);
+        update_post_meta($post->ID, 'datum', ((new \DateTimeImmutable($tournament['start']))->getTimestamp()));
+        update_post_meta($post->ID, 'eind-datum_612', ((new \DateTimeImmutable($tournament['end']))->getTimestamp()));
         // do not update the nahouw-link, it was not changed or else we could not find this tournament
     }
 
@@ -188,8 +188,8 @@ class Plugin
                 'categorie' => $tournament['conv_category'],
                 'toernooi-type' => $tournament['conv_type'],
                 'locatie' => $tournament['location'],
-                'begin-datum' => $tournament['start'],
-                'eind-datum' => $tournament['end'],
+                'datum' => ((new \DateTimeImmutable($tournament['start']))->getTimestamp()),
+                'eind-datum_612' => ((new \DateTimeImmutable($tournament['end']))->getTimestamp()),
                 'live-stream-link' => '',
                 'nahouw-resultaten' => '',
                 'foto-poster' => '',
