@@ -75,7 +75,7 @@ class Plugin
                     $tn['location'] = $tournament->location ?? '';
                     $tn['country'] = $tournament->ioc_country_abbr ?? 'NED';
                     $tn['weapons'] = $tournament->weapon_summary ?? 'SaFlEp';
-                    $tn['categories'] = $tournament->weapons ?? "men's epee";
+                    $tn['categories'] = $tournament->weapon_age_gender ?? ["weapon" => "epee", "gender" => "male", "age" => "seniors"];
                     $tn['level'] = $tournament->level ?? 'National';
                     $tn['uri'] = $tournament->url ?? '';
 
@@ -215,8 +215,6 @@ class Plugin
 
     private static function categoryToMeta($tournament)
     {
-        // split categories on line break
-        $lst = preg_split('/[\r\n]/s', $tournament['categories']);
         $hasB = false;
         $hasP = false;
         $hasC = false;
@@ -226,23 +224,21 @@ class Plugin
         $hasR = false;
         $hasL = false;
         $hasO = false;
+        $bcats = ["benjamins", "pullets", "kuikens"];
+        $pcats = ["boys/girls", "pupillen"];
+        $ccats = ['cadets', 'cadetten'];
+        $jcats = ['juniors', 'junioren'];
+        $scats = ['seniors', 'senioren'];
+        $vcats = ['veterans', 'veteranen'];
 
-        foreach ($lst as $cat) {
-            $posB = strpos($cat, "benjamin ") === 0;
-            $posC = strpos($cat, "cadet ") === 0;
-            $posJ = strpos($cat, "junior ") === 0;
-            $posV = strpos($cat, "veterans ") === 0;
-            $posBoys = strpos($cat, "boy's ") === 0;
-            $posGirls = strpos($cat, "girl's ") === 0;
-            $posMen = strpos($cat, "men's ") === 0;
-            $posWomen = strpos($cat, "women's ") === 0;
-
-            $hasB = $hasB || $posB;
-            $hasP = $hasP || $posBoys || $posGirls;
-            $hasC = $hasC || $posC;
-            $hasJ = $hasJ || $posJ;
-            $hasS = $hasS || $posMen || $posWomen;
-            $hasV = $hasV || $posV;
+        foreach ($tournament['categories'] as $cat) {
+            $age = $cat->age ?? 'none';
+            $hasB = $hasB || in_array($age, $bcats);
+            $hasP = $hasP || in_array($age, $pcats);
+            $hasC = $hasC || in_array($age, $ccats);
+            $hasJ = $hasJ || in_array($age, $jcats);
+            $hasS = $hasS || in_array($age, $scats);
+            $hasV = $hasV || in_array($age, $vcats);
         }
         return [
             "Benjamins" => $hasB ? 'true' : 'false',
